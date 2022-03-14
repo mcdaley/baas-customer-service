@@ -1,54 +1,22 @@
-# Users Microservice
+# BaaS Customer Microservice
+
+## Overiew
+The BaaS Customer Microservice provides a set of Rest APIs to create,
+manage, and delete BaaS Customers, where a Customer is a person that 
+is attempting to open either a consumer or business account.
+
+The Customer Microservice does not connect to a core banking engine,
+but is designed to be a framework that can plug into a core banking
+engine in the future.
+
+Currently, the APIs will connect to a fake service that will provide 
+the expected response. Since there isn't a core bank engine the request
+and responses will be based on current BaaS providers.
+
+## Rest API
+
+### POST /v1/customers
 
 ## Articles
 - [Managing multiple environments in NestJS](https://dev.to/pitops/managing-multiple-environments-in-n)
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
-```
-
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

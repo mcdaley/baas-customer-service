@@ -1,11 +1,11 @@
 //-----------------------------------------------------------------------------
-// src/clients/entities/client.entity.ts
+// src/customers/entities/customer.entity.ts
 //-----------------------------------------------------------------------------
 
 /**
- * @class Client
+ * @class Customer
  */
-export class Client {
+export class Customer {
   id:         string
   branchId:   string
   firstName:  string

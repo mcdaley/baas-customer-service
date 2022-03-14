@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// src/clients/dto/create-client.dto.ts
+// src/customers/dto/create-customer.dto.ts
 //-----------------------------------------------------------------------------
 import { 
   Equals,
@@ -17,9 +17,9 @@ import {
 import { CreateAddressDto }   from '../../addresses/dto/create-address.dto'
 
 /**
- * @class CreateClientDto
+ * @class CreateCustomerDto
  */
-export class CreateClientDto {
+export class CreateCustomerDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(128, {message: 'First name is too long'})

@@ -1,14 +1,14 @@
 //-----------------------------------------------------------------------------
-// src/exceptions/client.errors.ts
+// src/exceptions/customer.errors.ts
 //-----------------------------------------------------------------------------
 import { HttpStatus } from "@nestjs/common";
 
 /**
- * Define all of the client-service errors that can occur in the microservice.
+ * Define all of the customer-service errors that can occur in the microservice.
  * For each error define the httpStatus, integer code and name of the error.
  * The errors should be grouped by the resource or a common theme.
  */
-export const ClientErrors = {
+export const CustomerErrors = {
   headers: {
     invalidIdempotencyKey: {
       httpStatus: HttpStatus.BAD_REQUEST,
@@ -23,21 +23,21 @@ export const ClientErrors = {
       name:       'Bad Request',
     }
   },
-  client: {
+  customer: {
     invalidRegistration: {
       httpStatus: HttpStatus.BAD_REQUEST,
       code:       2001,
-      name:       `Invalid Client Registration`,
+      name:       `Invalid Customer Registration`,
     },
     internalError: {
       httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
       code:       2002,
-      name:       `Internal Client Error`,
+      name:       `Internal Customer Error`,
     },
     notFound: {
       httpStatus: HttpStatus.NOT_FOUND,
       code:       2003,
-      name:       `Client Not Found`,
+      name:       `Customer Not Found`,
     },
   }
 }

@@ -1,31 +1,31 @@
 //-----------------------------------------------------------------------------
-// src/clients/clients.service.ts
+// src/customers/customers.service.ts
 //-----------------------------------------------------------------------------
 import { 
   Injectable
 }                               from '@nestjs/common'
-import { CreateClientDto }      from './dto/create-client.dto'
-import { UpdateClientDto }      from './dto/update-client.dto'
+import { CreateCustomerDto }    from './dto/create-customer.dto'
+import { UpdateCustomerDto }    from './dto/update-customer.dto'
 import { 
-  MambuClientService, 
+  MambuCustomerService, 
   PatchOperation 
-}                               from '../core-bank-apis/mambu/mambu-client.service'
+}                               from '../core-bank-apis/mambu/mambu-customer.service'
 import { WinstonLoggerService } from '../logger/winston-logger.service'
 
 @Injectable()
-export class ClientsService {
+export class CustomersService {
   constructor(
     private readonly logger     : WinstonLoggerService,
-    private readonly mambuClient: MambuClientService
+    private readonly mambuCustomer: MambuCustomerService
   ) {}
 
-  async create(createClientDto: CreateClientDto) {
+  async create(createCustomerDto: CreateCustomerDto) {
     try {
-      const client    = await this.mambuClient.create(createClientDto)
+      const customer    = await this.mambuCustomer.create(createCustomerDto)
       const result  = {
-        client: client,
+        customer: customer,
       }
-      this.logger.log(`Created client, sending response= %o`, result)
+      this.logger.log(`Created customer, sending response= %o`, result)
       return result
     }
     catch(error) {
@@ -35,11 +35,11 @@ export class ClientsService {
 
   async findAll() {
     try {
-      const clients = await this.mambuClient.findAll()
+      const customers = await this.mambuCustomer.findAll()
       const result  = {
-        clients: clients,
+        customers: customers,
       }
-      this.logger.log(`Fetched [%d] clients`, clients.length)
+      this.logger.log(`Fetched [%d] customers`, customers.length)
       return result
     }
     catch(error) {
@@ -50,14 +50,14 @@ export class ClientsService {
   /**
    * @method findOne
    * 
-   * Search for a client by Id and return the client. If the client is not found
+   * Search for a customer by Id and return the customer. If the customer is not found
    * return a 404 Not Found response.
    */
-  async findOne(clientId: string) {
+  async findOne(customerId: string) {
     try {
-      const client  = await this.mambuClient.findOne(clientId)
+      const customer  = await this.mambuCustomer.findOne(customerId)
       const result  = {
-        client: client,
+        customer: customer,
       }
       return result
     }
@@ -69,14 +69,14 @@ export class ClientsService {
   /**
    * @method update
    * 
-   * PUT method to update all of the fields of a client except for the client's 
+   * PUT method to update all of the fields of a customer except for the customer's 
    * dob and ssn.
    */
-  async update(clientId: string, updateClientDto: UpdateClientDto) {
+  async update(customerId: string, updateCustomerDto: UpdateCustomerDto) {
     try {
-      const client    = await this.mambuClient.update(clientId, updateClientDto)
+      const customer    = await this.mambuCustomer.update(customerId, updateCustomerDto)
       const result  = {
-        client: client
+        customer: customer
       }
       return result
     }
@@ -88,15 +88,15 @@ export class ClientsService {
   /**
    * @method updateField
    * 
-   * Use the Mambu patch operation to update a single client field.
+   * Use the Mambu patch operation to update a single customer field.
    */
-  async updateField(clientId: string, patchClientDto: PatchOperation) {
+  async updateField(customerId: string, patchCustomerDto: PatchOperation) {
     try {
-      const client  = await this.mambuClient.updateField(clientId, patchClientDto)
+      const customer  = await this.mambuCustomer.updateField(customerId, patchCustomerDto)
       const result  = {
-        client: client
+        customer: customer
       }
-      this.logger.log(`Patched client, response= %o`, result)
+      this.logger.log(`Patched customer, response= %o`, result)
       return result
     }
     catch(error) {
@@ -107,17 +107,17 @@ export class ClientsService {
   /**
    * @method remove
    */
-  async remove(clientId: string) {
+  async remove(customerId: string) {
     try {
       /////////////////////////////////////////////////////////////////////////
       // TODO: 03/11/2022
       // Look into how the success message is being built and what the 
       // expected success message should be according to Rest API guidelines.
       /////////////////////////////////////////////////////////////////////////
-      const result    = await this.mambuClient.remove(clientId)
+      const result    = await this.mambuCustomer.remove(customerId)
       const response  = {
         statusCode: 204,
-        clientId:   clientId,
+        customerId:   customerId,
       }
       return response
     }

@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// src/core-bank-apis/mambu/mambu-client.service.ts
+// src/core-bank-apis/mambu/mambu-customer.service.ts
 //-----------------------------------------------------------------------------
 import { 
   Injectable,
@@ -11,21 +11,21 @@ import {
   plainToClassFromExist 
 }                                   from 'class-transformer'
 
-import { CreateClientDto }          from '../../clients/dto/create-client.dto'
-import { UpdateClientDto }          from '../../clients/dto/update-client.dto'
-import { Client }                   from '../../clients/entities/client.entity'
+import { CreateCustomerDto }        from '../../customers/dto/create-customer.dto'
+import { UpdateCustomerDto }        from '../../customers/dto/update-customer.dto'
+import { Customer }                 from '../../customers/entities/customer.entity'
 import { WinstonLoggerService }     from '../../logger/winston-logger.service'
 import { uuid }                     from '../../common/utils'
-import { ClientErrors }             from '../../exceptions/client.errors'
+import { CustomerErrors }           from '../../exceptions/customer.errors'
 import { 
   InvalidRegistrationError,
   InternalError,
   NotFoundError,
-}                                   from '../../exceptions/client-service.exceptions'
+}                                   from '../../exceptions/customer-service.exceptions'
 
 /**
- * Define enums, interface, and classes to support the Mambu Client
- * patch operation which allows one Client field to be updated at
+ * Define enums, interface, and classes to support the Mambu Customer
+ * patch operation which allows one Customer field to be updated at
  * a time. It seems like a weird implementation by Mambu.
  */
  export enum PatchOp {
@@ -50,31 +50,31 @@ export class PatchOperation implements IPatchOperation {
 }
 
 /**
- * @class MambuClientService
+ * @class MambuCustomerService
  * 
- * The MambuClientService class is a wrapper to call the Mambu Client APIs 
- * for the Clients microservice.
+ * The MambuCustomerService class is a wrapper to call the Mambu Customer APIs 
+ * for the Customers microservice.
  */
 @Injectable()
-export class MambuClientService {
+export class MambuCustomerService {
   constructor(private readonly logger: WinstonLoggerService) {
-    this.clients = new Map<string, Client>()
+    this.customers = new Map<string, Customer>()
   }
 
   private index:    number    = 0       // TODO: Get rid of the index
-  private clients:  Map<string, Client>
+  private customers:  Map<string, Customer>
 
   /**
-   * Determine if the client is already registered by looping through all
-   * of the clients. Typically this would be tested using a DB unique
+   * Determine if the customer is already registered by looping through all
+   * of the customers. Typically this would be tested using a DB unique
    * constraint on the email field.
    * 
    * @method isRegistered
    * @param  email 
    */
   private isRegistered(email: string) : boolean {
-    for(let client of this.clients.values()) {
-      if(client.email === email) {
+    for(let customer of this.customers.values()) {
+      if(customer.email === email) {
         return true
       }
     }
@@ -83,40 +83,40 @@ export class MambuClientService {
 
   /**
    * @method  create
-   * @param   createClientDto
+   * @param   createCustomerDto
    * @returns 
    */
-  public create(createClientDto: CreateClientDto) : Promise<Client> {
+  public create(createCustomerDto: CreateCustomerDto) : Promise<Customer> {
     return new Promise( (resolve, reject) => {
       try {
-        this.logger.debug(`Create new mambu client= %o`, createClientDto)
+        this.logger.debug(`Create new mambu customer= %o`, createCustomerDto)
 
-        // Verify client has accepted the terms
-        if(!createClientDto.terms) {
+        // Verify customer has accepted the terms
+        if(!createCustomerDto.terms) {
           return reject(
             new InvalidRegistrationError(
-              ClientErrors.client.invalidRegistration,
+              CustomerErrors.customer.invalidRegistration,
               `Please accept the terms of service`,
             )
           )
         }
 
         // Reject if email is already registered.
-        if(this.isRegistered(createClientDto.email)) {
+        if(this.isRegistered(createCustomerDto.email)) {
           return reject(
             new InvalidRegistrationError(
-              ClientErrors.client.invalidRegistration, 
-              `Email ${createClientDto.email} is already registered`
+              CustomerErrors.customer.invalidRegistration, 
+              `Email ${createCustomerDto.email} is already registered`
             )
           )
         }
 
-        let client: Client  = plainToClass(Client, createClientDto)
-        client.id           = uuid()
-        client.branchId     = uuid()
+        let customer: Customer  = plainToClass(Customer, createCustomerDto)
+        customer.id           = uuid()
+        customer.branchId     = uuid()
 
-        this.clients.set(client.id, client)
-        resolve(client)
+        this.customers.set(customer.id, customer)
+        resolve(customer)
       }
       catch(error) {
         ///////////////////////////////////////////////////////////////////////
@@ -124,10 +124,10 @@ export class MambuClientService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          ClientErrors.client.internalError, 
+          CustomerErrors.customer.internalError, 
           error.message
         )
-        this.logger.error(`Failed to create client, err= %s`, internalError.message)
+        this.logger.error(`Failed to create customer, err= %s`, internalError.message)
         reject(internalError)
       }
     })
@@ -136,15 +136,15 @@ export class MambuClientService {
   /**
    * @method  findAll
    */
-  public findAll() : Promise<Client[]> {
+  public findAll() : Promise<Customer[]> {
     return new Promise( (resolve, reject) => {
       try {
-        this.logger.debug('Fetched [%d] clients', this.clients.size)
-        let clientList: Client[] = []
-        for(let client of this.clients.values()) {
-          clientList.push(client)
+        this.logger.debug('Fetched [%d] customers', this.customers.size)
+        let customerList: Customer[] = []
+        for(let customer of this.customers.values()) {
+          customerList.push(customer)
         }
-        resolve(clientList)
+        resolve(customerList)
       }
       catch(error) {
         ///////////////////////////////////////////////////////////////////////
@@ -152,10 +152,10 @@ export class MambuClientService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          ClientErrors.client.internalError, 
+          CustomerErrors.customer.internalError, 
           error.message
         )
-        this.logger.error(`Failed to create client, err= %s`, internalError.message)
+        this.logger.error(`Failed to create customer, err= %s`, internalError.message)
         reject(internalError)
       }
     })
@@ -164,27 +164,27 @@ export class MambuClientService {
   /**
    * @method  findOne
    */
-   public findOne(clientId: string) : Promise<Client> | undefined {
+   public findOne(customerId: string) : Promise<Customer> | undefined {
     return new Promise( (resolve, reject) => {
       try {
         /////////////////////////////////////////////////////////////////////
         // TODO: 03/11/2020
         // Build and throw resourceNotFound exception
         /////////////////////////////////////////////////////////////////////
-        if(!this.clients.has(clientId)) {
-          this.logger.error(`Client w/ id=${clientId} Not Found`)
+        if(!this.customers.has(customerId)) {
+          this.logger.error(`Customer w/ id=${customerId} Not Found`)
           return reject(
             new NotFoundError(
-              ClientErrors.client.notFound, 
-              `Client w/ id=${clientId} Not Found`
+              CustomerErrors.customer.notFound, 
+              `Customer w/ id=${customerId} Not Found`
             )
           )
         }
 
-        const client = this.clients.get(clientId)
-        this.logger.log(`Fetched client= %o`, client)
+        const customer = this.customers.get(customerId)
+        this.logger.log(`Fetched customer= %o`, customer)
 
-        resolve(client)
+        resolve(customer)
       }
       catch(error) {
         ///////////////////////////////////////////////////////////////////////
@@ -192,10 +192,10 @@ export class MambuClientService {
         // In real system, I'll need to build a proper exception error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          ClientErrors.client.internalError, 
+          CustomerErrors.customer.internalError, 
           error.message
         )
-        this.logger.error(`Failed to create client, err= %s`, internalError.message)
+        this.logger.error(`Failed to create customer, err= %s`, internalError.message)
         reject(internalError)
       }
     })
@@ -204,26 +204,26 @@ export class MambuClientService {
   /**
    * @method update
    */
-  public update(clientId: string, updateClientDto: UpdateClientDto) : Promise<Client> | undefined {
+  public update(customerId: string, updateCustomerDto: UpdateCustomerDto) : Promise<Customer> | undefined {
     return new Promise( (resolve, reject) => {
       try {
         /////////////////////////////////////////////////////////////////////
         // TODO: 03/11/2020
         // Build and throw resourceNotFound exception
         /////////////////////////////////////////////////////////////////////
-        if(!this.clients.has(clientId)) {
-          this.logger.error(`Client w/ id=${clientId} Not Found`)
+        if(!this.customers.has(customerId)) {
+          this.logger.error(`Customer w/ id=${customerId} Not Found`)
           return reject(
             new NotFoundError(
-              ClientErrors.client.notFound, 
-              `Failed to update client, client w/ id=${clientId} Not Found`
+              CustomerErrors.customer.notFound, 
+              `Failed to update customer, customer w/ id=${customerId} Not Found`
             )
           )
         }
 
-        let client        = this.clients.get(clientId)
-        let updatedClient = plainToClassFromExist(client, updateClientDto)
-        resolve(updatedClient)
+        let customer        = this.customers.get(customerId)
+        let updatedCustomer = plainToClassFromExist(customer, updateCustomerDto)
+        resolve(updatedCustomer)
       }
       catch(error) {
         ///////////////////////////////////////////////////////////////////////
@@ -231,10 +231,10 @@ export class MambuClientService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          ClientErrors.client.internalError, 
+          CustomerErrors.customer.internalError, 
           error.message
         )
-        this.logger.error(`Failed to create client, err= %s`, internalError.message)
+        this.logger.error(`Failed to create customer, err= %s`, internalError.message)
         reject(internalError)
       }
     })
@@ -244,32 +244,32 @@ export class MambuClientService {
    * @method updateField
    * 
    * Basic implementation of Mambu Patch Operation. Only support the the 
-   * 'REPLACE' operation to replace the value of a field in the Client 
+   * 'REPLACE' operation to replace the value of a field in the Customer 
    * object. 
    */
   public updateField(
-    clientId      : string, 
-    patchClientDto: PatchOperation): Promise<Client> | undefined 
+    customerId      : string, 
+    patchCustomerDto: PatchOperation): Promise<Customer> | undefined 
   {
     return new Promise( (resolve, reject) => {
       try {
-        // Reject if client is not found
-        if(!this.clients.has(clientId)) {
-          this.logger.error(`Client w/ id=${clientId} Not Found`)
+        // Reject if customer is not found
+        if(!this.customers.has(customerId)) {
+          this.logger.error(`Customer w/ id=${customerId} Not Found`)
           return reject(
             new NotFoundError(
-              ClientErrors.client.notFound, 
-              `Failed to update client, client w/ id=${clientId} Not Found`
+              CustomerErrors.customer.notFound, 
+              `Failed to update customer, customer w/ id=${customerId} Not Found`
             )
           )
         }
 
-        // Update and replace the client
-        let client                  = this.clients.get(clientId)
-        client[patchClientDto.path] = patchClientDto.value
-        this.clients.set(clientId,client)
+        // Update and replace the customer
+        let customer                  = this.customers.get(customerId)
+        customer[patchCustomerDto.path] = patchCustomerDto.value
+        this.customers.set(customerId,customer)
 
-        resolve(client)
+        resolve(customer)
       }
       catch(error) {
         ///////////////////////////////////////////////////////////////////////
@@ -277,10 +277,10 @@ export class MambuClientService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          ClientErrors.client.internalError, 
+          CustomerErrors.customer.internalError, 
           error.message
         )
-        this.logger.error(`Failed to create client, err= %s`, internalError.message)
+        this.logger.error(`Failed to create customer, err= %s`, internalError.message)
         reject(internalError)
       }
     })
@@ -289,22 +289,22 @@ export class MambuClientService {
   /**
    * @method remove
    */
-  public remove(clientId: string) : Promise<boolean> {
+  public remove(customerId: string) : Promise<boolean> {
     return new Promise( (resolve, reject) => {
       try {
-        // Reject if client is not found
-        if(!this.clients.has(clientId)) {
-          this.logger.error(`Client w/ id=${clientId} Not Found`)
+        // Reject if customer is not found
+        if(!this.customers.has(customerId)) {
+          this.logger.error(`Customer w/ id=${customerId} Not Found`)
           return reject(
             new NotFoundError(
-              ClientErrors.client.notFound, 
-              `Failed to delete client, client w/ id=${clientId} Not Found`
+              CustomerErrors.customer.notFound, 
+              `Failed to delete customer, customer w/ id=${customerId} Not Found`
             )
           )
         }
 
-        this.logger.debug(`Remove client w/ clientId=${clientId}`)
-        this.clients.delete(clientId)
+        this.logger.debug(`Remove customer w/ customerId=${customerId}`)
+        this.customers.delete(customerId)
         
         resolve(true)       
       }
@@ -314,10 +314,10 @@ export class MambuClientService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          ClientErrors.client.internalError, 
+          CustomerErrors.customer.internalError, 
           error.message
         )
-        this.logger.error(`Failed to create client, err= %s`, internalError.message)
+        this.logger.error(`Failed to create customer, err= %s`, internalError.message)
         reject(internalError)
       }
     })

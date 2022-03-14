@@ -8,7 +8,7 @@ import { configuration, validate }  from './config/configuration'
 import { AppController }            from './app.controller'
 import { AppService }               from './app.service'
 
-import { ClientsModule }            from './clients/clients.module'
+import { CustomersModule }          from './customers/customers.module'
 import { AddressesModule }          from './addresses/addresses.module'
 import { WinstonLoggerModule }      from './logger/winston-logger.module'
 
@@ -20,7 +20,7 @@ import { WinstonLoggerModule }      from './logger/winston-logger.module'
       load:         [configuration],
       validate,
     }), 
-    ClientsModule, 
+    CustomersModule, 
     AddressesModule,
     WinstonLoggerModule,
   ],

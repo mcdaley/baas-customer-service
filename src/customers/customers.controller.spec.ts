@@ -1,20 +1,20 @@
 //-----------------------------------------------------------------------------
-// src/clients/clients.controller.spec.ts
+// src/customers/customers.controller.spec.ts
 //-----------------------------------------------------------------------------
 import { Test, TestingModule }  from '@nestjs/testing';
-import { ClientsController }    from './clients.controller';
-import { ClientsService }       from './clients.service';
+import { CustomersController }    from './customers.controller';
+import { CustomersService }       from './customers.service';
 
-describe('ClientsController', () => {
-  let controller: ClientsController;
+describe('CustomersController', () => {
+  let controller: CustomersController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers:  [ClientsController],
-      providers:    [ClientsService],
+      controllers:  [CustomersController],
+      providers:    [CustomersService],
     }).compile();
 
-    controller = module.get<ClientsController>(ClientsController);
+    controller = module.get<CustomersController>(CustomersController);
   });
 
   it('should be defined', () => {

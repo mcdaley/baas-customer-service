@@ -11,8 +11,8 @@ import {
 import { Request, Response }      from 'express'
 
 import { WinstonLoggerService }   from '../logger/winston-logger.service'
-import { ClientServiceException } from '../exceptions/client-service.exceptions'
-import { ClientErrors }           from '../exceptions/client.errors'
+import { CustomerServiceException } from '../exceptions/customer-service.exceptions'
+import { CustomerErrors }           from '../exceptions/customer.errors'
 
 /**
  * @class HttpExceptionFilter
@@ -27,10 +27,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   /////////////////////////////////////////////////////////////////////////////
   // TODO: 03/11/2022
-  // Figure out how to build and return ClientService exceptions instead of
+  // Figure out how to build and return CustomerService exceptions instead of
   // manually building the error objects here.
   /////////////////////////////////////////////////////////////////////////////
-  catch(exception: HttpException | ClientServiceException, host: ArgumentsHost) {
+  catch(exception: HttpException | CustomerServiceException, host: ArgumentsHost) {
     const ctx       = host.switchToHttp()
     const response  = ctx.getResponse<Response>()
     const request   = ctx.getRequest<Request>()
@@ -43,13 +43,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
       let badRequest: any = exception.getResponse()
       
       error = {
-        ...ClientErrors.request.badRequest,
+        ...CustomerErrors.request.badRequest,
         path:       path,
         message:    badRequest.message,
         timestamp:  new Date().toISOString()
       }
     }
-    else if(exception instanceof ClientServiceException) {
+    else if(exception instanceof CustomerServiceException) {
       error = {
         statusCode: status,
         id:         exception.id,
