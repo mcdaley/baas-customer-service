@@ -15,14 +15,14 @@ import { WinstonLoggerService } from '../logger/winston-logger.service'
 @Injectable()
 export class CustomersService {
   constructor(
-    private readonly logger     : WinstonLoggerService,
+    private readonly logger       : WinstonLoggerService,
     private readonly mambuCustomer: MambuCustomerService
   ) {}
 
   async create(createCustomerDto: CreateCustomerDto) {
     try {
-      const customer    = await this.mambuCustomer.create(createCustomerDto)
-      const result  = {
+      const customer  = await this.mambuCustomer.create(createCustomerDto)
+      const result    = {
         customer: customer,
       }
       this.logger.log(`Created customer, sending response= %o`, result)

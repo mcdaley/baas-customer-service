@@ -2,18 +2,19 @@
 // src/customers/dto/create-customer.dto.ts
 //-----------------------------------------------------------------------------
 import { 
-  Equals,
-  isBoolean,
-  IsBoolean,
   IsEmail,
   IsEnum,
+  IsJSON,
   IsNotEmpty,
+  IsOptional,
+  IsNotEmptyObject,
   IsString, 
-  Length, 
   Matches,
   MaxLength,
   ValidateNested,
 }                             from 'class-validator'
+import { Type }               from 'class-transformer'
+
 import { CreateAddressDto }   from '../../addresses/dto/create-address.dto'
 
 /**
@@ -23,35 +24,45 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(128, {message: 'First name is too long'})
-  firstName:  string
+  firstName:    string
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(128, {message: 'Middle name is too long'})
+  middleName:   string
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(128, {message: 'Last name is too long'})
-  lastName:   string
+  lastName:     string
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  @MaxLength(128, {message: 'Company name is too long'})
-  company:   string
+  @MaxLength(24)
+  suffix:       string
 
   @IsNotEmpty()
   @IsEmail()
-  email:      string
+  email:        string
 
   @Matches(/^\d{3}-\d{3}-\d{4}$/)
-  phone:     string
+  phoneNumber:  string
   
   @IsNotEmpty()
   @IsString()
-  @Length(6, 64)
-  password:   string
+  @Matches(/^\d{3}-\d{2}-\d{4}$/)
+  ssn:          string
 
-  @IsNotEmpty({message: 'Please accept the terms'})
-  @IsBoolean()
-  terms:      boolean
+  @IsOptional()
+  @IsJSON()
+  metatdata:    string
   
-  //* @ValidateNested()
-  //* @Type(() => CreateAddressDto)
-  //* address:    CreateAddressDto
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => CreateAddressDto)
+  physical_address:  CreateAddressDto
+
+  @ValidateNested()
+  @Type(() => CreateAddressDto)
+  mailing_address:  CreateAddressDto
 }

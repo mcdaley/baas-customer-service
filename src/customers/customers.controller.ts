@@ -2,15 +2,16 @@
 // src/customers/customers.controller.ts
 //-----------------------------------------------------------------------------
 import { 
-  Controller, 
-  Get, 
-  Post, 
   Body,
-  Patch, 
-  Param, 
-  Put,
+  Controller, 
   Delete,
-  ParseUUIDPipe, 
+  Get, 
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Patch,  
+  Post, 
+  Put, 
 }                                 from '@nestjs/common'
 
 import { CustomersService }       from './customers.service'
@@ -69,6 +70,7 @@ export class CustomersController {
   }
 
   @Delete(':customerId')
+  @HttpCode(204)
   removeV1(@Param('customerId', ParseUUIDPipe) customerId: string) {
     this.logger.log(`DELETE /v1/customers/${customerId}`)
     return this.customersService.remove(customerId);

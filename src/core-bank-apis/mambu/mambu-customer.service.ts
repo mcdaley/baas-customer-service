@@ -7,6 +7,8 @@ import {
   HttpStatus,
 }                                   from '@nestjs/common'
 import { 
+  classToPlain,
+  instanceToPlain,
   plainToClass, 
   plainToClassFromExist 
 }                                   from 'class-transformer'
@@ -22,6 +24,7 @@ import {
   InternalError,
   NotFoundError,
 }                                   from '../../exceptions/customer-service.exceptions'
+import { CustomerStatus } from 'src/common/enums/customer-status.enum'
 
 /**
  * Define enums, interface, and classes to support the Mambu Customer
@@ -91,29 +94,10 @@ export class MambuCustomerService {
       try {
         this.logger.debug(`Create new mambu customer= %o`, createCustomerDto)
 
-        // Verify customer has accepted the terms
-        if(!createCustomerDto.terms) {
-          return reject(
-            new InvalidRegistrationError(
-              CustomerErrors.customer.invalidRegistration,
-              `Please accept the terms of service`,
-            )
-          )
-        }
-
-        // Reject if email is already registered.
-        if(this.isRegistered(createCustomerDto.email)) {
-          return reject(
-            new InvalidRegistrationError(
-              CustomerErrors.customer.invalidRegistration, 
-              `Email ${createCustomerDto.email} is already registered`
-            )
-          )
-        }
-
-        let customer: Customer  = plainToClass(Customer, createCustomerDto)
-        customer.id           = uuid()
-        customer.branchId     = uuid()
+        let customer      = plainToClass(Customer, createCustomerDto)
+        customer.id       = uuid()
+        customer.branchId = uuid()
+        customer.status   = CustomerStatus.Pending
 
         this.customers.set(customer.id, customer)
         resolve(customer)

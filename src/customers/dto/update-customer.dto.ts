@@ -7,6 +7,13 @@ import { CreateCustomerDto }      from './create-customer.dto'
 /**
  * @class UpdateCustomerDto
  */
-export class UpdateCustomerDto extends PartialType(
-  OmitType(CreateCustomerDto, ['company'] as const)
+///////////////////////////////////////////////////////////////////////////////
+// BUG: 03/15/2022
+// The OmitType does not make all of the fields optional.
+///////////////////////////////////////////////////////////////////////////////
+export class UpdateCustomerDto extends PartialType( 
+  OmitType(CreateCustomerDto, ['ssn'] as const)
 ) {}
+
+//* export class UpdateCustomerDto extends PartialType(CreateCustomerDto) {}
+

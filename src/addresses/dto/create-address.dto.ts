@@ -20,29 +20,29 @@ export class CreateAddressDto {
   @IsOptional()
   @IsString()
   @MaxLength(128)
-  name:     string
+  name:           string
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(128)
-  line1:    string      // maxLength 128
+  street_line_1:  string      // maxLength 128
   
   @IsOptional()
   @IsString()
   @MaxLength(128)
-  line2:    string      // maxLength 128
+  street_line_2:  string      // maxLength 128
   
   @IsNotEmpty()
   @IsString()
   @MaxLength(128)
-  city:     string      // maxLength 128
+  city:           string      // maxLength 128
 
   @IsNotEmpty()
   @IsString()
   @IsEnum(States)
-  state:    States
+  state:          States
 
   @IsNotEmpty()
   @Matches(/^\d{5}(-\d{4})?$/)
-  zipCode:  string      
+  postalCode:     string      
 }
