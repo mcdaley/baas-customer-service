@@ -9,10 +9,10 @@ import {
   validate as uuidValidate,
 }                               from 'uuid'
 
-import { CustomerErrors }         from '../exceptions/customer.errors'
+import { BaaSErrors }           from '../exceptions/baas.errors'
 import { 
   InvalidIdempotencyKeyError, 
-}                               from '../exceptions/customer-service.exceptions'
+}                               from '../exceptions/baas.exceptions'
 
 /**
  * @function isValidUUID
@@ -38,14 +38,14 @@ export const IdempotencyKey = createParamDecorator((data: string, ctx: Execution
   const idempotencyKey  = headers['idempotency-key']
   if(!idempotencyKey) {
     throw new InvalidIdempotencyKeyError(
-      CustomerErrors.headers.invalidIdempotencyKey, 
+      BaaSErrors.headers.invalidIdempotencyKey, 
       `Idempotency-Key is required`
     )
   }
 
   if(!isValidUUID(idempotencyKey)) {
     throw new InvalidIdempotencyKeyError(
-      CustomerErrors.headers.invalidIdempotencyKey, 
+      BaaSErrors.headers.invalidIdempotencyKey, 
       `Invalid Idempotency-Key=[${idempotencyKey}]`
     )
   }

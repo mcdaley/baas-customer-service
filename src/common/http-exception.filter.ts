@@ -11,8 +11,8 @@ import {
 import { Request, Response }      from 'express'
 
 import { WinstonLoggerService }   from '../logger/winston-logger.service'
-import { CustomerServiceException } from '../exceptions/customer-service.exceptions'
-import { CustomerErrors }           from '../exceptions/customer.errors'
+import { BaaSException }          from '../exceptions/baas.exceptions'
+import { BaaSErrors }             from '../exceptions/baas.errors'
 
 /**
  * @class HttpExceptionFilter
@@ -30,7 +30,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   // Figure out how to build and return CustomerService exceptions instead of
   // manually building the error objects here.
   /////////////////////////////////////////////////////////////////////////////
-  catch(exception: HttpException | CustomerServiceException, host: ArgumentsHost) {
+  catch(exception: HttpException | BaaSException, host: ArgumentsHost) {
     const ctx       = host.switchToHttp()
     const response  = ctx.getResponse<Response>()
     const request   = ctx.getRequest<Request>()
@@ -43,13 +43,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
       let badRequest: any = exception.getResponse()
       
       error = {
-        ...CustomerErrors.request.badRequest,
+        ...BaaSErrors.request.badRequest,
         path:       path,
         message:    badRequest.message,
         timestamp:  new Date().toISOString()
       }
     }
-    else if(exception instanceof CustomerServiceException) {
+    else if(exception instanceof BaaSException) {
       error = {
         statusCode: status,
         id:         exception.id,

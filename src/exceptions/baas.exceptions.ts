@@ -7,9 +7,9 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 
 /**
- * @interface ICustomerServiceError
+ * @interface IBaaSError
  */
-export interface ICustomerServiceError {
+export interface IBaaSError {
   httpStatus: number,
   id?:        string,
   code:       number,
@@ -19,19 +19,19 @@ export interface ICustomerServiceError {
 }
 
 /**
- * @interface ICustomerServiceErrorOptions
+ * @interface IBaaSErrorOptions
  */
- export interface ICustomerServiceErrorOptions {
+ export interface IBaaSErrorOptions {
   cause:      Error | undefined,
 }
 
 /**
- * @class CustomerServiceException
+ * @class BaaSException
  * 
  * Example exception that extends the HttpException to prove that I can build 
  * an exception hierarchy and also log the exceptions.
  */
-export class CustomerServiceException extends HttpException {
+export class BaaSException extends HttpException {
   id:         string
   code:       number
   name:       string
@@ -40,7 +40,7 @@ export class CustomerServiceException extends HttpException {
   details:    any[]
   cause:      Error | undefined
 
-  constructor(customerServiceError: ICustomerServiceError, message: string) {
+  constructor(customerServiceError: IBaaSError, message: string) {
     super(message, customerServiceError.httpStatus)
 
     this.id         = uuidv4()
@@ -54,36 +54,36 @@ export class CustomerServiceException extends HttpException {
   }
 
   toString() {
-    return `CustomerServiceException, code=${this.code}, message=${this.message}, status=${this.getStatus()}`
+    return `BaaSException, code=${this.code}, message=${this.message}, status=${this.getStatus()}`
   }
 }
 
-export class InvalidIdempotencyKeyError extends CustomerServiceException {
-  constructor(customerServiceError: ICustomerServiceError, message: string) {
+export class InvalidIdempotencyKeyError extends BaaSException {
+  constructor(customerServiceError: IBaaSError, message: string) {
     super(customerServiceError, message)
   }
 }
 
-export class BadRequestError extends CustomerServiceException {
-  constructor(customerServiceError: ICustomerServiceError, message: string) {
+export class BadRequestError extends BaaSException {
+  constructor(customerServiceError: IBaaSError, message: string) {
     super(customerServiceError, message)
   }
 }
 
-export class InvalidRegistrationError extends CustomerServiceException {
-  constructor(customerServiceError: ICustomerServiceError, message: string){
+export class InvalidRegistrationError extends BaaSException {
+  constructor(customerServiceError: IBaaSError, message: string){
     super(customerServiceError, message)
   }
 }
 
-export class InternalError extends CustomerServiceException {
-  constructor(customerServiceError: ICustomerServiceError, message: string) {
+export class InternalError extends BaaSException {
+  constructor(customerServiceError: IBaaSError, message: string) {
     super(customerServiceError, message)
   }
 }
 
-export class NotFoundError extends CustomerServiceException {
-  constructor(customerServiceError: ICustomerServiceError, message: string) {
+export class NotFoundError extends BaaSException {
+  constructor(customerServiceError: IBaaSError, message: string) {
     super(customerServiceError, message)
   }
 }

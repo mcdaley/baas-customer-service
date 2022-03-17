@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// src/exceptions/customer.errors.ts
+// src/exceptions/baas.errors.ts
 //-----------------------------------------------------------------------------
 import { HttpStatus } from "@nestjs/common";
 
@@ -8,7 +8,7 @@ import { HttpStatus } from "@nestjs/common";
  * For each error define the httpStatus, integer code and name of the error.
  * The errors should be grouped by the resource or a common theme.
  */
-export const CustomerErrors = {
+export const BaaSErrors = {
   headers: {
     invalidIdempotencyKey: {
       httpStatus: HttpStatus.BAD_REQUEST,

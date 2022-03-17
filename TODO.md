@@ -3,7 +3,7 @@
 ## Bugs
 - []  For the UpdateCustomerDto the OmitType function does not filter
       out the 'ssn' when it is sent in a request. It also does not
-      perform any validation on the ssn.
+      perform any validation on the ssn. NEED TO ADD THE WHITELIST OPTIONS
 - []  Above problem also does not filter out extra properties in the
       request object. For example, if I add "extra_data": "Not Defined"
       then the response contains the "extra_data" and a validation

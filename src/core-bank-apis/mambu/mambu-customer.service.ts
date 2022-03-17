@@ -18,13 +18,13 @@ import { UpdateCustomerDto }        from '../../customers/dto/update-customer.dt
 import { Customer }                 from '../../customers/entities/customer.entity'
 import { WinstonLoggerService }     from '../../logger/winston-logger.service'
 import { uuid }                     from '../../common/utils'
-import { CustomerErrors }           from '../../exceptions/customer.errors'
+import { BaaSErrors }               from '../../exceptions/baas.errors'
 import { 
   InvalidRegistrationError,
   InternalError,
   NotFoundError,
-}                                   from '../../exceptions/customer-service.exceptions'
-import { CustomerStatus } from 'src/common/enums/customer-status.enum'
+}                                   from '../../exceptions/baas.exceptions'
+import { CustomerStatus }           from '../../common/enums/customer-status.enum'
 
 /**
  * Define enums, interface, and classes to support the Mambu Customer
@@ -108,7 +108,7 @@ export class MambuCustomerService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          CustomerErrors.customer.internalError, 
+          BaaSErrors.customer.internalError, 
           error.message
         )
         this.logger.error(`Failed to create customer, err= %s`, internalError.message)
@@ -136,7 +136,7 @@ export class MambuCustomerService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          CustomerErrors.customer.internalError, 
+          BaaSErrors.customer.internalError, 
           error.message
         )
         this.logger.error(`Failed to create customer, err= %s`, internalError.message)
@@ -159,7 +159,7 @@ export class MambuCustomerService {
           this.logger.error(`Customer w/ id=${customerId} Not Found`)
           return reject(
             new NotFoundError(
-              CustomerErrors.customer.notFound, 
+              BaaSErrors.customer.notFound, 
               `Customer w/ id=${customerId} Not Found`
             )
           )
@@ -176,7 +176,7 @@ export class MambuCustomerService {
         // In real system, I'll need to build a proper exception error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          CustomerErrors.customer.internalError, 
+          BaaSErrors.customer.internalError, 
           error.message
         )
         this.logger.error(`Failed to create customer, err= %s`, internalError.message)
@@ -199,7 +199,7 @@ export class MambuCustomerService {
           this.logger.error(`Customer w/ id=${customerId} Not Found`)
           return reject(
             new NotFoundError(
-              CustomerErrors.customer.notFound, 
+              BaaSErrors.customer.notFound, 
               `Failed to update customer, customer w/ id=${customerId} Not Found`
             )
           )
@@ -215,7 +215,7 @@ export class MambuCustomerService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          CustomerErrors.customer.internalError, 
+          BaaSErrors.customer.internalError, 
           error.message
         )
         this.logger.error(`Failed to create customer, err= %s`, internalError.message)
@@ -242,7 +242,7 @@ export class MambuCustomerService {
           this.logger.error(`Customer w/ id=${customerId} Not Found`)
           return reject(
             new NotFoundError(
-              CustomerErrors.customer.notFound, 
+              BaaSErrors.customer.notFound, 
               `Failed to update customer, customer w/ id=${customerId} Not Found`
             )
           )
@@ -261,7 +261,7 @@ export class MambuCustomerService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          CustomerErrors.customer.internalError, 
+          BaaSErrors.customer.internalError, 
           error.message
         )
         this.logger.error(`Failed to create customer, err= %s`, internalError.message)
@@ -281,7 +281,7 @@ export class MambuCustomerService {
           this.logger.error(`Customer w/ id=${customerId} Not Found`)
           return reject(
             new NotFoundError(
-              CustomerErrors.customer.notFound, 
+              BaaSErrors.customer.notFound, 
               `Failed to delete customer, customer w/ id=${customerId} Not Found`
             )
           )
@@ -298,7 +298,7 @@ export class MambuCustomerService {
         // In real system, I'll need to build a proper exception from error.
         ///////////////////////////////////////////////////////////////////////
         const internalError = new InternalError(
-          CustomerErrors.customer.internalError, 
+          BaaSErrors.customer.internalError, 
           error.message
         )
         this.logger.error(`Failed to create customer, err= %s`, internalError.message)
