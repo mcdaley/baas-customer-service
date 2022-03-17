@@ -36,20 +36,20 @@ class EnvironmentVariables {
 
   @IsString()
   @IsOptional()
-  APP_NAME: string
+  CUSTOMER_APP_NAME: string
 
   @IsEnum(LogLevel)
   @IsOptional()
-  LOG_LEVEL: LogLevel
+  CUSTOMER_LOG_LEVEL: LogLevel
 
   @IsNumber()
-  PORT: number
+  CUSTOMER_PORT: number
 
   @IsString()
-  JWT_SECRET: string
+  CUSTOMER_JWT_SECRET: string
 
   @IsString()
-  JWT_EXPIRES_IN: string
+  CUSTOMER_JWT_EXPIRES_IN: string
 }
 
 /**
@@ -88,12 +88,12 @@ export function validate(config: Record<string, unknown>) {
  */
 export const configuration = () => ({
   NODE_ENV: process.env.NODE_ENV  || Environment.Development,
-  appName:  process.env.APP_NAME  || 'connext-bank',
-  LogLevel: process.env.LOG_LEVEL || LogLevel.Debug,
+  appName:  process.env.CUSTOMER_APP_NAME  || 'connext-bank',
+  LogLevel: process.env.CUSTOMER_LOG_LEVEL || LogLevel.Debug,
   appRoot:  process.cwd(),
-  port:     parseInt(process.env.PORT, 10) || 4001,
+  port:     parseInt(process.env.CUSTOMER_PORT, 10) || 4001,
   jwt: {
-    secret:     process.env.JWT_SECRET,
-    expiresIn:  process.env.JWT_EXPIRES_IN,
+    secret:     process.env.CUSTOMER_JWT_SECRET,
+    expiresIn:  process.env.CUSTOMER_JWT_EXPIRES_IN,
   },
 })
