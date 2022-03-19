@@ -94,10 +94,10 @@ export class MambuCustomerService {
       try {
         this.logger.debug(`Create new mambu customer= %o`, createCustomerDto)
 
-        let customer      = plainToClass(Customer, createCustomerDto)
-        customer.id       = uuid()
-        customer.branchId = uuid()
-        customer.status   = CustomerStatus.Pending
+        let customer        = plainToClass(Customer, createCustomerDto)
+        customer.id         = uuid()
+        customer.branch_id  = uuid()
+        customer.status     = CustomerStatus.Pending
 
         this.customers.set(customer.id, customer)
         resolve(customer)

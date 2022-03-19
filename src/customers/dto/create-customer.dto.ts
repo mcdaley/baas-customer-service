@@ -24,17 +24,17 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(128, {message: 'First name is too long'})
-  firstName:    string
+  first_name:   string
 
   @IsOptional()
   @IsString()
   @MaxLength(128, {message: 'Middle name is too long'})
-  middleName:   string
+  middle_name:  string
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(128, {message: 'Last name is too long'})
-  lastName:     string
+  last_name:    string
 
   @IsOptional()
   @IsString()
@@ -46,7 +46,7 @@ export class CreateCustomerDto {
   email:        string
 
   @Matches(/^\d{3}-\d{3}-\d{4}$/)
-  phoneNumber:  string
+  phone_number: string
   
   @IsNotEmpty()
   @IsString()

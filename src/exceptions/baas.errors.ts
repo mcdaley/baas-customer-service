@@ -23,6 +23,13 @@ export const BaaSErrors = {
       name:       'Bad Request',
     }
   },
+  axios: {
+    internalError: {
+      httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+      code:       1003,
+      name:       'Axios Internal Error',
+    }
+  },
   customer: {
     invalidRegistration: {
       httpStatus: HttpStatus.BAD_REQUEST,

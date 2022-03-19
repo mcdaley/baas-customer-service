@@ -6,6 +6,9 @@ import {
 }                               from '@nestjs/common'
 import { CreateCustomerDto }    from './dto/create-customer.dto'
 import { UpdateCustomerDto }    from './dto/update-customer.dto'
+import {
+  BankSimulatorCustomerService
+}                               from '../core-bank-apis/simulator/bank-simulator-customer.service'
 import { 
   MambuCustomerService, 
   PatchOperation 
@@ -16,12 +19,13 @@ import { WinstonLoggerService } from '../logger/winston-logger.service'
 export class CustomersService {
   constructor(
     private readonly logger       : WinstonLoggerService,
-    private readonly mambuCustomer: MambuCustomerService
+    private readonly mambuCustomer: MambuCustomerService,
+    private readonly bankCustomer : BankSimulatorCustomerService,
   ) {}
 
   async create(createCustomerDto: CreateCustomerDto) {
     try {
-      const customer  = await this.mambuCustomer.create(createCustomerDto)
+      const customer  = await this.bankCustomer.create(createCustomerDto)
       const result    = {
         customer: customer,
       }
@@ -35,16 +39,30 @@ export class CustomersService {
 
   async findAll() {
     try {
-      const customers = await this.mambuCustomer.findAll()
+      const customers = await this.bankCustomer.findAll()
       const result  = {
         customers: customers,
       }
-      this.logger.log(`Fetched [%d] customers`, customers.length)
+      this.logger.log(`Fetched [%d] customers`, customers)
       return result
     }
     catch(error) {
       throw(error)
     }
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  // TODO: 3/19/2022
+  // Attempt to use rxjs observables to handle the response from the
+  // httpService. I'm going to come back to this later when I have a basic
+  // understanding of rxjs and observables.
+  //
+  // This returns the Customers[] but I'm unable to create the object 
+  // { customers: customers[] } that I want in the response.
+  /////////////////////////////////////////////////////////////////////////////
+  findAllV2() {
+    const  response = this.bankCustomer.findAllV2()
+    return response
   }
 
   /**
@@ -55,7 +73,7 @@ export class CustomersService {
    */
   async findOne(customerId: string) {
     try {
-      const customer  = await this.mambuCustomer.findOne(customerId)
+      const customer  = await this.bankCustomer.findOne(customerId)
       const result  = {
         customer: customer,
       }
@@ -74,7 +92,7 @@ export class CustomersService {
    */
   async update(customerId: string, updateCustomerDto: UpdateCustomerDto) {
     try {
-      const customer    = await this.mambuCustomer.update(customerId, updateCustomerDto)
+      const customer    = await this.bankCustomer.update(customerId, updateCustomerDto)
       const result  = {
         customer: customer
       }
@@ -114,7 +132,7 @@ export class CustomersService {
       // Look into how the success message is being built and what the 
       // expected success message should be according to Rest API guidelines.
       /////////////////////////////////////////////////////////////////////////
-      const result    = await this.mambuCustomer.remove(customerId)
+      const result    = await this.bankCustomer.remove(customerId)
       const response  = {
         statusCode: 204,
         customerId:   customerId,

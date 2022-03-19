@@ -87,3 +87,9 @@ export class NotFoundError extends BaaSException {
     super(customerServiceError, message)
   }
 }
+
+export class BaaSAxiosError extends BaaSException {
+  constructor(customerServiceError: IBaaSError, message: string) {
+    super(customerServiceError, message)
+  }
+}

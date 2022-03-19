@@ -9,14 +9,14 @@ import { Address }        from '../../addresses/entities/address.entity'
  */
 export class Customer {
   id:               string            // Unique customer identifier
-  branchId:         string            // Identifies customer's bank
+  branch_id:        string            // Identifies customer's bank
   status:           CustomerStatus
-  firstName:        string
-  middleName:       string
-  lastName:         string
+  first_name:       string
+  middle_name:      string
+  last_name:        string
   suffix:           string
   email:            string
-  phoneNumber:      string
+  phone_number:     string
   ssn:              string
   metatdata:        string
   physical_address: Address
