@@ -50,6 +50,12 @@ class EnvironmentVariables {
 
   @IsString()
   CUSTOMER_JWT_EXPIRES_IN: string
+
+  @IsString()
+  BANK_SIMULATOR_URL: string
+
+  @IsString()
+  BANK_SIMULATOR_CUSTOMERS_URL: string
 }
 
 /**
@@ -87,7 +93,7 @@ export function validate(config: Record<string, unknown>) {
  * can be accessed in the app.
  */
 export const configuration = () => ({
-  NODE_ENV: process.env.NODE_ENV  || Environment.Development,
+  NODE_ENV: process.env.NODE_ENV           || Environment.Development,
   appName:  process.env.CUSTOMER_APP_NAME  || 'connext-bank',
   LogLevel: process.env.CUSTOMER_LOG_LEVEL || LogLevel.Debug,
   appRoot:  process.cwd(),
@@ -96,4 +102,5 @@ export const configuration = () => ({
     secret:     process.env.CUSTOMER_JWT_SECRET,
     expiresIn:  process.env.CUSTOMER_JWT_EXPIRES_IN,
   },
+  bankSimulatorCustomersUrl: process.env.BANK_SIMULATOR_CUSTOMERS_URL
 })

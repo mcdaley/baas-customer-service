@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 import { HttpService }              from '@nestjs/axios'
 import { Injectable }               from '@nestjs/common'
+import { ConfigService }            from '@nestjs/config'
 import { map, Observable }          from 'rxjs'
 import { AxiosResponse }            from 'axios'
 import axios                        from 'axios'
@@ -11,32 +12,31 @@ import { plainToClass }             from 'class-transformer'
 import { CreateCustomerDto }        from '../../customers/dto/create-customer.dto'
 import { Customer }                 from '../../customers/entities/customer.entity'
 import { WinstonLoggerService }     from '../../logger/winston-logger.service'
-import { BaaSErrors }               from '../../exceptions/baas.errors'
 import { 
-  BaaSAxiosError, 
-  IBaaSError, 
   BaaSExceptionFactory,
 }                                   from '../../exceptions/baas.exceptions'
 import { UpdateCustomerDto } from 'src/customers/dto/update-customer.dto'
-
-// Define the Core Bank Simulator URLs
-const  Simulator            = `http://localhost:5001`
-const  SimulatorCustomerUrl = `${Simulator}/customers`
 
 /**
  * @class BankSimulatorCustomerService
  */
 @Injectable()
 export class BankSimulatorCustomerService {
+  private customersUrl: string
+
   constructor(
-    private readonly httpService: HttpService,
-    private readonly logger:      WinstonLoggerService
-  ) {}
+    private readonly httpService:   HttpService,
+    private readonly configService: ConfigService,
+    private readonly logger:        WinstonLoggerService
+  ) {
+    this.customersUrl = configService.get('bankSimulatorCustomersUrl')
+    this.logger.log(`Bank Simulator URL= %s`, this.customersUrl)
+  }
 
   public create(createCustomerDto: CreateCustomerDto) : Promise<Customer> {
     return new Promise( async (resolve, reject) => {
       try {
-        const  url = SimulatorCustomerUrl
+        const  url = this.customersUrl
         this.logger.debug(`POST ${url}, createCustomerDto= %o`, createCustomerDto)
 
         let customer = plainToClass(Customer, createCustomerDto)
@@ -61,7 +61,7 @@ export class BankSimulatorCustomerService {
   // - https://stackoverflow.com/questions/63662285/how-to-get-nested-api-data-using-nestjs-httpservice-axios
   /////////////////////////////////////////////////////////////////////////////
   findAllV2() : Observable<AxiosResponse<Customer[]>> {
-    const  url = SimulatorCustomerUrl
+    const  url = this.customersUrl
     this.logger.log(`Simulator, findAll url= %s`, url)
 
     const response = this.httpService.get(url)
@@ -77,7 +77,7 @@ export class BankSimulatorCustomerService {
    * @method findAll
    */
   public findAll(): Promise<Customer[]> {
-    const  url = SimulatorCustomerUrl
+    const  url = this.customersUrl
     this.logger.debug(`GET %s`, url)
 
     return new Promise( async (resolve, reject) => {
@@ -98,7 +98,7 @@ export class BankSimulatorCustomerService {
    * @method findOne
    */
   public findOne(customerId: string): Promise<Customer> {
-    const  url = `${SimulatorCustomerUrl}/${customerId}`
+    const  url = `${this.customersUrl}/${customerId}`
     this.logger.log(`GET %s`, url)
 
     return new Promise( async (resolve, reject) => {
@@ -124,7 +124,7 @@ export class BankSimulatorCustomerService {
   public update(
     customerId:        string, 
     updateCustomerDto: UpdateCustomerDto) : Promise<Customer> {
-      const url = `${SimulatorCustomerUrl}/${customerId}`
+      const  url = `${this.customersUrl}/${customerId}`
       this.logger.log(`PUT ${url}, updateCustomerDto= %o`, updateCustomerDto)
 
       /////////////////////////////////////////////////////////////////////////
@@ -155,7 +155,7 @@ export class BankSimulatorCustomerService {
      * @method remove
      */
     public remove(customerId: string): Promise<boolean> {
-      const url = `${SimulatorCustomerUrl}/${customerId}`
+      const  url = `${this.customersUrl}/${customerId}`
       this.logger.log(`Simulator Request, DELETE ${url}`)
 
       return new Promise( async (resolve, reject) => {
