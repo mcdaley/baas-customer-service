@@ -24,7 +24,11 @@ async function bootstrap() {
   app.useLogger(app.get(WinstonLoggerService))
 
   // Validation pipeline to validate requests
-  app.useGlobalPipes(new ValidationPipe({ transform: true }))
+  app.useGlobalPipes(new ValidationPipe({ 
+    transform:            true, 
+    whitelist:            true,  
+    forbidNonWhitelisted: true,
+  }))
 
   // Load app configuration
   const configService = app.get(ConfigService)
