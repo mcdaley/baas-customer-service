@@ -3,12 +3,8 @@
 //-----------------------------------------------------------------------------
 import { 
   Injectable,
-  HttpException, 
-  HttpStatus,
 }                                   from '@nestjs/common'
 import { 
-  classToPlain,
-  instanceToPlain,
   plainToClass, 
   plainToClassFromExist 
 }                                   from 'class-transformer'
@@ -20,7 +16,6 @@ import { WinstonLoggerService }     from '../../logger/winston-logger.service'
 import { uuid }                     from '../../common/utils'
 import { BaaSErrors }               from '../../exceptions/baas.errors'
 import { 
-  InvalidRegistrationError,
   InternalError,
   NotFoundError,
 }                                   from '../../exceptions/baas.exceptions'

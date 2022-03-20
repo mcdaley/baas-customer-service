@@ -36,15 +36,57 @@ export const BaaSErrors = {
       code:       2001,
       name:       `Invalid Customer Registration`,
     },
-    internalError: {
-      httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+    unauthorized: {
+      httpStatus: HttpStatus.UNAUTHORIZED,
       code:       2002,
-      name:       `Internal Customer Error`,
+      name:       `Customer is Unauthorized`,
+    },
+    forbidden: {
+      httpStatus: HttpStatus.FORBIDDEN,
+      code:       2003,
+      name:       `Customer is Forbidden`,
     },
     notFound: {
       httpStatus: HttpStatus.NOT_FOUND,
-      code:       2003,
+      code:       2004,
       name:       `Customer Not Found`,
     },
-  }
+    internalError: {
+      httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+      code:       2010,
+      name:       `Internal Customer Error`,
+    },
+    unknownError: {
+      httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+      code:       2011,
+      name:       `Unknown Customer Error`,
+    },
+  },
+  resource: {
+    unauthorized: {
+      httpStatus: HttpStatus.UNAUTHORIZED,
+      code:       3002,
+      name:       `Unauthorized`,
+    },
+    forbidden: {
+      httpStatus: HttpStatus.FORBIDDEN,
+      code:       3003,
+      name:       `Forbidden`,
+    },
+    notFound: {
+      httpStatus: HttpStatus.NOT_FOUND,
+      code:       3004,
+      name:       `Resource Not Found`,
+    },
+    internalError: {
+      httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+      code:       3010,
+      name:       `Internal Resource Error`,
+    },
+    unknownError: {
+      httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+      code:       3011,
+      name:       `Unknown Resource Error`,
+    },
+  },
 }

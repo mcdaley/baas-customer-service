@@ -15,6 +15,7 @@ import { BaaSErrors }               from '../../exceptions/baas.errors'
 import { 
   BaaSAxiosError, 
   IBaaSError, 
+  BaaSExceptionFactory,
 }                                   from '../../exceptions/baas.exceptions'
 import { UpdateCustomerDto } from 'src/customers/dto/update-customer.dto'
 
@@ -44,12 +45,8 @@ export class BankSimulatorCustomerService {
         resolve(response.data)
       }
       catch(error) {
-        this.logger.error(`Failed to create customer, error= %o`, error)
-        const baasError = this.buildException(error)
-        const axiosError: BaaSAxiosError = new BaaSAxiosError(
-          baasError, error.message
-        )
-        reject(axiosError)
+        //* this.logger.error(`Failed to create customer, error= %o`, error)
+        reject(BaaSExceptionFactory.create(error, `customer`))
       }
     })
   }
@@ -115,12 +112,8 @@ export class BankSimulatorCustomerService {
         resolve(customer)
       }
       catch(error) {
-        this.logger.error(`Failed to fetch customers, error= %o`, error)
-        const baasError = this.buildException(error)
-        const axiosError: BaaSAxiosError = new BaaSAxiosError(
-          baasError, error.message
-        )
-        reject(axiosError)
+        //* this.logger.error(`Failed to fetch customer, error= %o`, error)
+        reject(BaaSExceptionFactory.create(error, `customer`))
       }
     })
   }
@@ -152,12 +145,8 @@ export class BankSimulatorCustomerService {
           resolve(customer)
         }
         catch(error) {
-          this.logger.error(`Failed to update customers, error= %o`, error)
-          const baasError = this.buildException(error)
-          const axiosError: BaaSAxiosError = new BaaSAxiosError(
-            baasError, error.message
-          )
-          reject(axiosError)
+          //* this.logger.error(`Failed to update customers, error= %o`, error)
+          reject(BaaSExceptionFactory.create(error, `customer`))
         }
       })
     }
@@ -177,45 +166,9 @@ export class BankSimulatorCustomerService {
           resolve(true)
         }
         catch(error) {
-          this.logger.error(`Failed to delete customers, error= %o`, error)
-          const baasError = this.buildException(error)
-          const axiosError: BaaSAxiosError = new BaaSAxiosError(
-            baasError, error.message
-          )
-          reject(axiosError)
+          //* this.logger.error(`Failed to delete customer, error= %o`, error)
+          reject(BaaSExceptionFactory.create(error, `customer`))
         }
       })
     }
-
-  /////////////////////////////////////////////////////////////////////////////
-  // TODO: 03/19/2022
-  // Add a factory to build the correct exception, e.g., CustomerNotFound
-  // for all the known codes in BaasErrors.
-  //
-  // Want to log the error after I have created the HttpException error, so 
-  // that I can log the error Id.
-  /////////////////////////////////////////////////////////////////////////////
-  /**
-   * @method buildException
-   */
-  private buildException(error): IBaaSError {
-    let errorType: IBaaSError;
-    if(error.isAxiosError === true) {
-      if(error.response.status === 404) {
-        errorType = BaaSErrors.customer.notFound
-      }
-      else {
-        errorType = {
-          httpStatus: error.response.status,
-          code:       1005,
-          name:       `Unhandled Axios Error`,
-        }
-      }
-    }
-    else {
-      errorType = BaaSErrors.axios.internalError
-    }
-
-    return errorType
-  }
 } // end of class BankSimulatorCustomerService
